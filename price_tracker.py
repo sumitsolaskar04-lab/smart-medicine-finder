@@ -1,61 +1,57 @@
 import json
 import os
+from datetime import datetime
 
 
 HISTORY_FILE = "data/price_history.json"
 
 
 def load_history():
+
     if not os.path.exists(HISTORY_FILE):
         return {}
 
-    with open(HISTORY_FILE, "r") as file:
+    with open(HISTORY_FILE, "r", encoding="utf-8") as file:
         return json.load(file)
 
 
 def save_history(history):
+
     os.makedirs("data", exist_ok=True)
 
-    with open(HISTORY_FILE, "w") as file:
+    with open(HISTORY_FILE, "w", encoding="utf-8") as file:
         json.dump(history, file, indent=4)
 
 
-def check_price_change(medicine_name, current_price):
+def track_price(medicine_name, current_price):
+
     history = load_history()
 
-    previous_price = history.get(medicine_name)
+    if medicine_name not in history:
+        history[medicine_name] = []
 
-    if previous_price is None:
-        history[medicine_name] = current_price
-        save_history(history)
+    previous_price = None
 
-        return {
-            "status": "FIRST_RECORD",
-            "previous_price": None,
-            "current_price": current_price,
-            "change_percent": 0
-        }
+    if history[medicine_name]:
+        previous_price = history[medicine_name][-1]["price"]
 
-    difference = current_price - previous_price
+    price_change = None
 
-    if previous_price != 0:
-        change_percent = (difference / previous_price) * 100
-    else:
-        change_percent = 0
+    if previous_price is not None:
+        price_change = round(current_price - previous_price, 2)
 
-    if difference > 0:
-        status = "PRICE_INCREASED"
-    elif difference < 0:
-        status = "PRICE_DECREASED"
-    else:
-        status = "NO_CHANGE"
+    record = {
+        "timestamp": datetime.now().isoformat(),
+        "price": current_price,
+        "price_change": price_change
+    }
 
-    history[medicine_name] = current_price
+    history[medicine_name].append(record)
+
     save_history(history)
 
     return {
-        "status": status,
-        "previous_price": previous_price,
         "current_price": current_price,
-        "change_percent": round(change_percent, 2)
+        "previous_price": previous_price,
+        "price_change": price_change
     }

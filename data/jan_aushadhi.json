@@ -1,0 +1,26 @@
+[
+  {
+    "drug_code": "PMBJP00412",
+    "generic_name": "Atorvastatin Tablets IP 10mg",
+    "clean_salt": "atorvastatin",
+    "strength": "10mg",
+    "mrp": 38.00,
+    "unit_size": "10 Tablets"
+  },
+  {
+    "drug_code": "PMBJP00881",
+    "generic_name": "Metformin Hydrochloride Sustained Release Tablets IP 500mg",
+    "clean_salt": "metformin",
+    "strength": "500mg",
+    "mrp": 12.50,
+    "unit_size": "10 Tablets"
+  },
+  {
+    "drug_code": "PMBJP01204",
+    "generic_name": "Paracetamol Tablets IP 650mg",
+    "clean_salt": "paracetamol",
+    "strength": "650mg",
+    "mrp": 11.00,
+    "unit_size": "10 Tablets"
+  }
+]
