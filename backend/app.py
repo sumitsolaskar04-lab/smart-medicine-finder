@@ -135,7 +135,8 @@ def home():
     return jsonify({
         "status": "online",
         "service": "Medicine Aggregator, Geolocation Finder & Price Tracker Engine",
-        "version": "1.2.0",
+        "version": "2.0.0",
+        "architecture_type": "Hybrid Online-Offline Mapping",
         "endpoints_available": [
             "GET /api/medicines",
             "GET /api/search?q=<name>",
@@ -214,6 +215,10 @@ def get_medicine(medicine_name):
 
 @app.route("/api/scrape-and-sync", methods=["POST"])
 def scrape_and_sync():
+    """
+    On-Demand Scraper Pipeline using Bright Data.
+    Acts as the master repository builder to populate medicine definitions and baseline prices.
+    """
     data = request.get_json() or {}
     target_url = data.get("url")
 
@@ -272,7 +277,7 @@ def scrape_and_sync():
 
         return jsonify({
             "status": "success",
-            "message": f"Successfully parsed and tracked {len(sync_summary)} items.",
+            "message": f"Successfully parsed and tracked {len(sync_summary)} items using Bright Data.",
             "updates": sync_summary
         })
 
@@ -283,7 +288,8 @@ def scrape_and_sync():
 @app.route("/api/medicine-availability-nearby", methods=["GET"])
 def get_medicine_availability_nearby():
     """
-    Finds nearby pharmacies and evaluates if a specific medicine is actively available at each point.
+    Finds real offline storefronts within a radius, evaluates their pricing,
+    cross-references the Jan Aushadhi substitution dataset, and sorts from cheapest to dearest.
     """
     query_medicine = request.args.get("medicine", "").strip().lower()
     lat = request.args.get("lat")
@@ -293,9 +299,8 @@ def get_medicine_availability_nearby():
     if not query_medicine or not lat or not lon:
         return jsonify({
             "status": "failed",
-            "error": "Missing required parameters: medicine, lat, and lon are mandatory."
+            "error": "Missing required query parameters: medicine, lat, lon"
         }), 400
-
 
 if __name__ == "__main__":
 
