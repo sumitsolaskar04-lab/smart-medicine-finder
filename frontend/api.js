@@ -3,7 +3,7 @@
 // ============================================================================
 
 const API_URL =
-    "http://10.231.8.182:5000/api";
+    "http://10.123.62.1:5000/api";
 
 
 // ============================================================================
@@ -15,7 +15,6 @@ async function searchMedicine(medicine) {
     const value =
         String(medicine || "").trim();
 
-
     if (!value) {
 
         throw new Error(
@@ -24,14 +23,11 @@ async function searchMedicine(medicine) {
 
     }
 
-
     const url =
         `${API_URL}/search?q=${encodeURIComponent(value)}`;
 
-
     const response =
         await fetch(url);
-
 
     if (!response.ok) {
 
@@ -41,9 +37,62 @@ async function searchMedicine(medicine) {
 
     }
 
+    return response.json();
+}
+
+
+// ============================================================================
+// Nearby Medicine / Pharmacy Availability
+// ============================================================================
+
+async function getNearbyMedicineAvailability(
+    medicine,
+    lat,
+    lon,
+    radius = 3000
+) {
+
+    const value =
+        String(medicine || "").trim();
+
+    if (!value) {
+
+        throw new Error(
+            "Medicine name is required."
+        );
+
+    }
+
+    if (
+        !Number.isFinite(Number(lat)) ||
+        !Number.isFinite(Number(lon))
+    ) {
+
+        throw new Error(
+            "Valid latitude and longitude are required."
+        );
+
+    }
+
+    const url =
+        `${API_URL}/medicine-availability-nearby` +
+        `?medicine=${encodeURIComponent(value)}` +
+        `&lat=${encodeURIComponent(lat)}` +
+        `&lon=${encodeURIComponent(lon)}` +
+        `&radius=${encodeURIComponent(radius)}`;
+
+    const response =
+        await fetch(url);
+
+    if (!response.ok) {
+
+        throw new Error(
+            `HTTP Error: ${response.status}`
+        );
+
+    }
 
     return response.json();
-
 }
 
 
@@ -56,10 +105,8 @@ async function getMedicines() {
     const url =
         `${API_URL}/medicines`;
 
-
     const response =
         await fetch(url);
-
 
     if (!response.ok) {
 
@@ -69,9 +116,7 @@ async function getMedicines() {
 
     }
 
-
     return response.json();
-
 }
 
 
@@ -84,7 +129,6 @@ async function getMedicine(medicine) {
     const value =
         String(medicine || "").trim();
 
-
     if (!value) {
 
         throw new Error(
@@ -93,14 +137,11 @@ async function getMedicine(medicine) {
 
     }
 
-
     const url =
         `${API_URL}/medicines/${encodeURIComponent(value)}`;
 
-
     const response =
         await fetch(url);
-
 
     if (!response.ok) {
 
@@ -110,7 +151,5 @@ async function getMedicine(medicine) {
 
     }
 
-
     return response.json();
-
 }

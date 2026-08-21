@@ -79,6 +79,41 @@ def normalize_string(text):
     return text
 
 
+def get_price_value(price):
+    """
+    Safely converts medicine prices from common formats to float.
+
+    Supports:
+    - int / float
+    - numeric strings such as "14.65"
+    - strings such as "₹1,499.00"
+    - dictionaries such as {"value": 14.65, "currency": "INR"}
+    """
+
+    if isinstance(price, dict):
+        return get_price_value(price.get("value", 0))
+
+    if isinstance(price, (int, float)):
+        return float(price)
+
+    if isinstance(price, str):
+        try:
+            cleaned_price = (
+                price
+                .replace("₹", "")
+                .replace(",", "")
+                .strip()
+            )
+            return float(cleaned_price)
+        except ValueError:
+            return 0.0
+
+    return 0.0
+
+
+# =========================================================
+# EXTRACT MEDICINE STRENGTH
+# =========================================================
 def extract_strength(text):
     if not text:
         return ""
@@ -105,7 +140,7 @@ def calculate_generic_substitution(commercial_med):
         or commercial_med.get("medicine_name", "")
     )
 
-    commercial_price = float(
+    commercial_price = get_price_value(
         commercial_med.get("mrp")
         or commercial_med.get("price")
         or 0
@@ -149,7 +184,7 @@ def calculate_generic_substitution(commercial_med):
                 or brand_strength == ja_strength.lower().replace(" ", "")
             ):
 
-                ja_price = float(
+                ja_price = get_price_value(
                     generic.get("mrp", 0)
                 )
 
@@ -410,16 +445,8 @@ def scrape_and_sync():
             if not med_name or scraped_price is None:
                 continue
 
-            # Bright Data may return price as:
-            # {"value": 15.9, "currency": "INR", "symbol": "₹"}
-
-            if isinstance(scraped_price, dict):
-
-                scraped_price = scraped_price.get(
-                    "value"
-                )
-
-            scraped_price = float(
+            # Safely normalize Bright Data price values.
+            scraped_price = get_price_value(
                 scraped_price
             )
 
