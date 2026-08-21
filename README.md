@@ -1,49 +1,29 @@
-<img width="960" height="437" alt="image" src="https://github.com/user-attachments/assets/5a2cce4d-551d-4aee-9d65-bcedaf148a8a" />## 🧩 Day 1 — Medicine Data Analyzer
+🚀 Hackathon Progress — Day by Day
 
-### 🎯 Objective
-Built the first Python program to analyze and validate medicine data received from Bright Data.
+🟢 Day 1 — Research & Scraping:
 
-### ✅ Work Completed
+Understood Bright Data and how web scraping works.
+Tested scraping with a medicine name.
+Extracted medicine details like price, MRP, manufacturer, etc.
+Learned and implemented discount calculation.
 
-- Created a Python-based **Medicine Data Analyzer**.
-- Processed medicine information including:
-  - 💊 Medicine Name
-  - 💰 Price
-  - 🏷️ MRP
-  - 🏭 Manufacturer
-  - 💉 Dosage
-  - 🧪 Salt
-  - 📅 Availability
-  - 🩺 Uses
-- Implemented extraction and display of important medicine details.
-- Implemented **discount percentage calculation** using Price and MRP.
-- Added **medicine data completeness validation**.
-- Checked whether the following important fields are available:
-  - Medicine Name
-  - Price
-  - MRP
-  - Manufacturer
-  - Availability
-- Added automatic data status:
-  - `COMPLETE` → All required information is available.
-  - `INCOMPLETE` → One or more required fields are missing.
-- Added identification of the **specific missing fields**.
+🔵 Day 2 — UI/UX Design:
 
-#### 🧾 Example
+Worked on the project UI/UX concept.
+Created the initial Figma design and website page structure.
+Finalized most of the frontend design and flow.
 
-> **Medicine:** P-500 Tablet  
-> **Price:** ₹11.43  
-> **MRP:** ₹14.65  
-> **Manufacturer:** APEX LABORATORIES PRIVATE LIMITED  
-> **Availability:** April 2029  
-> **Uses:** To treat fever and pain
+🟣 Day 3 — Backend Development:
 
-#### 🔍 Data Validation
+Started building the Python backend.
+Developed the first half of the backend modules.
+Worked on medicine data processing, price comparison, analysis, and scraper integration.
+Meanwhile, my teammate completed the frontend implementation and fixed UI bugs.
 
-- ✅ If all important information exists → `Data Status: COMPLETE`
-- ⚠️ If any important information is missing → `Data Status: INCOMPLETE`
-- ❌ Missing fields are displayed, e.g. `Missing: price`
+🟠 Day 4 — Frontend + Backend Integration:
 
----
+Connected the frontend with the backend API.
+Tested communication between both sides.
+Verified whether medicine data could flow correctly from backend → frontend.
+Focused mainly on integration and testing; detailed bug fixing is planned next.
 
-### 🏆 **Status: ✅ Day 1 Completed**

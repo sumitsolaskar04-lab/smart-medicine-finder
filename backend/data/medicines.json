@@ -1,0 +1,392 @@
+[
+  {
+    "medicine_name": "DULCOFLEX NEW PACK Tablet 15's",
+    "price": {
+      "value": 16.55,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 16.55,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Sanofi India Limited",
+    "uses": "Constipation",
+    "input_url": "https://www.netmeds.com/product/dulcoflex-new-pack-tablet-15s-mhrk4z-12937883"
+  },
+  {
+    "medicine_name": "VANTEJ LONG LASTING PROTECTION EVERYDAY Tooth Paste 100g",
+    "price": {
+      "value": 344.43,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 344.43,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Dr. Reddy's Laboratories Ltd",
+    "uses": "Oral Care",
+    "input_url": "https://www.netmeds.com/product/vantej-long-lasting-protection-everyday-tooth-paste-100g-m0z83k-8502210"
+  },
+  {
+    "medicine_name": "Aldactone 50mg Tablet 15'S",
+    "price": {
+      "value": 62.66,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 62.66,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Rpg Life Sciences Ltd",
+    "dosage": "50mg",
+    "uses": "Hypertension",
+    "input_url": "https://www.netmeds.com/product/aldactone-50mg-tablet-15s-lui3hw-8264688"
+  },
+  {
+    "medicine_name": "Lopamide 2mg Tablet 10'S",
+    "price": {
+      "value": 21.76,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 21.76,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Torrent Pharmaceuticals Ltd",
+    "dosage": "2mg",
+    "uses": "Diarrhoea",
+    "input_url": "https://www.netmeds.com/product/lopamide-2mg-tablet-10s-lui5x9-8314692"
+  },
+  {
+    "medicine_name": "Cabgolin 0.5mg Tablet 4'S",
+    "price": {
+      "value": 503.74,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 503.74,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Sun Pharmaceutical Industries Ltd",
+    "dosage": "0.5mg",
+    "uses": "Uterus Conditions",
+    "input_url": "https://www.netmeds.com/product/cabgolin-05mg-tablet-4s-lui51s-8296945"
+  },
+  {
+    "medicine_name": "Electral Powder 21.80gm",
+    "price": {
+      "value": 19.59,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 19.59,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "FDC Limited",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/electral-powder-2180gm-lui5rv-8310238"
+  },
+  {
+    "medicine_name": "Nurokind OD Tablet 20'S",
+    "price": {
+      "value": 188.79,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 188.79,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Mankind Pharma Pvt Ltd",
+    "uses": "Nootropics And Neuro...",
+    "input_url": "https://www.netmeds.com/product/nurokind-od-tablet-20s-luh901-7956919"
+  },
+  {
+    "medicine_name": "GLYZINC NM Tablet 10's",
+    "price": {
+      "value": 28.93,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 28.93,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "NOUVEAU MEDICAMENT (P) LTD",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/glyzinc-nm-tablet-10s-lui54r-8297783"
+  },
+  {
+    "medicine_name": "Himalaya Liv 52 DS Tablets 60's",
+    "price": {
+      "value": 252.9,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 252.9,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Himalaya Wellness Company",
+    "uses": "Ayurvedic Medicine",
+    "input_url": "https://www.netmeds.com/product/liv-52-ds-tablet-60s-lxzkf1-8478037"
+  },
+  {
+    "medicine_name": "Prega News Card Device 1's",
+    "price": {
+      "value": 53.4,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 53.4,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Mankind Pharma Pvt Ltd",
+    "uses": "Pregnancy Testing Ki...",
+    "input_url": "https://www.netmeds.com/product/prega-news-card-device-1s-lui71g-8335966"
+  },
+  {
+    "medicine_name": "BETADINE Ointment 20gm",
+    "price": {
+      "value": 119.07,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 119.07,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Win Medicare Pvt Ltd",
+    "uses": "Wound Care",
+    "input_url": "https://www.netmeds.com/product/betadine-ointment-20gm-lui7u0-8350722"
+  },
+  {
+    "medicine_name": "Cabaza 400mg Tablet 10'S",
+    "price": {
+      "value": 93.45,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 93.45,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Jolly Healthcare",
+    "dosage": "400mg",
+    "uses": "Intermittent Claudic...",
+    "input_url": "https://www.netmeds.com/product/cabaza-400mg-tablet-10s-lui348-8256724"
+  },
+  {
+    "medicine_name": "Evion 400 Capsule 20's",
+    "price": {
+      "value": 87.68,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 87.68,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Procter & Gamble",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/evion-400mg-capsule-20s-lui61e-8316805"
+  },
+  {
+    "medicine_name": "DYDROLAST 10 Tablet 10's",
+    "price": {
+      "value": 211.5,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 211.5,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Leeford Healthcare Ltd (Generics)",
+    "uses": "Hormonal Therapy",
+    "input_url": "https://www.netmeds.com/product/dydrolast-10-tablet-10s-lz2t21-8496313"
+  },
+  {
+    "medicine_name": "Meloset 3mg Tablet 10'S",
+    "price": {
+      "value": 58.4,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 58.4,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Aristo Pharmaceuticals Pvt Ltd",
+    "dosage": "3mg",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/meloset-3mg-tablet-10s-lui5w7-8313198"
+  },
+  {
+    "medicine_name": "Tinfal Tablet 10'S",
+    "price": {
+      "value": 35.25,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 35.25,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Leeford Healthcare Ltd (Generics)",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/tinfal-tablet-10s-lui1z4-8232294"
+  },
+  {
+    "medicine_name": "TRAVATAN Ophthalmic Solution 2.5ml",
+    "price": {
+      "value": 855.01,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 855.01,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Novartis Healthcare Pvt Ltd",
+    "uses": "Glaucoma",
+    "input_url": "https://www.netmeds.com/product/travatan-ophthalmic-solution-25ml-lufv5l-7526773"
+  },
+  {
+    "medicine_name": "OMEGA SOFT Softgel Capsule 10's",
+    "price": {
+      "value": 181.56,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 181.56,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Knoll Healthcare Pvt Ltd",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/omega-soft-softgel-capsule-10s-mha5ro-12858502"
+  },
+  {
+    "medicine_name": "Cipcal 500mg Tablet 15'S",
+    "price": {
+      "value": 50.72,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 50.72,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Cipla Ltd (Generics)",
+    "dosage": "500mg",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/cipcal-500mg-tablet-15s-lui1st-8228141"
+  },
+  {
+    "medicine_name": "Mildy For Clean & Healthy Hair Enriched with Aloe vera Everyday Shampoo 100ml",
+    "price": {
+      "value": 178,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 178,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Intas Pharmaceuticals Ltd",
+    "uses": "Hair Loss",
+    "input_url": "https://www.netmeds.com/product/mildy-for-clean-healthy-hair-enriched-with-aloe-vera-everyday-shampoo-100ml-lui3rt-8270139"
+  },
+  {
+    "medicine_name": "TINFAL 5% Topical Solution 60ml",
+    "price": {
+      "value": 234,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 234,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Leeford Healthcare Ltd (Generics)",
+    "uses": "Hair Loss",
+    "input_url": "https://www.netmeds.com/product/tinfal-5-topical-solution-60ml-lui1o7-8226351"
+  },
+  {
+    "medicine_name": "NODOSIS 2G Sachet 2.4gm",
+    "price": {
+      "value": 13.46,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 13.46,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Steadfast Medishield Pvt Ltd",
+    "uses": "Supplements",
+    "input_url": "https://www.netmeds.com/product/nodosis-2g-sachet-24gm-lui5pj-8311341"
+  },
+  {
+    "medicine_name": "CLINSOL Gel 25g",
+    "price": {
+      "value": 52.64,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 52.64,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Leeford Healthcare Ltd (Generics)",
+    "uses": "Acne",
+    "input_url": "https://www.netmeds.com/product/clinsol-gel-25g-mcczbf-11270355"
+  },
+  {
+    "medicine_name": "DOXYNEC Capsule 10's",
+    "price": {
+      "value": 52.64,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "mrp": {
+      "value": 52.64,
+      "currency": "INR",
+      "symbol": "₹"
+    },
+    "manufacturer": "Leeford Healthcare Ltd (Generics)",
+    "uses": "Bacterial Infections",
+    "input_url": "https://www.netmeds.com/product/doxynec-capsule-10s-m21mnk-8556788"
+  }
+]

@@ -2,8 +2,7 @@ REQUIRED_FIELDS = [
     "medicine_name",
     "price",
     "mrp",
-    "manufacturer",
-    "availability"
+    "manufacturer"
 ]
 
 
@@ -39,30 +38,37 @@ def validate_price(price, mrp):
 
 
 def analyze_medicine(medicine):
+
     missing_fields = find_missing_fields(medicine)
 
     result = medicine.copy()
 
+    # Get price
     if "price" in medicine and isinstance(medicine["price"], dict):
         price = medicine["price"].get("value")
     else:
         price = None
 
+    # Get MRP
     if "mrp" in medicine and isinstance(medicine["mrp"], dict):
         mrp = medicine["mrp"].get("value")
     else:
         mrp = None
 
+    # Default values
     result["discount_percent"] = None
     result["data_status"] = "COMPLETE"
     result["missing_fields"] = missing_fields
 
+    # Calculate discount
     if price is not None and mrp is not None:
+
         if validate_price(price, mrp):
             result["discount_percent"] = calculate_discount(price, mrp)
         else:
             result["data_status"] = "INVALID"
 
+    # Mark incomplete if required fields are missing
     if missing_fields:
         result["data_status"] = "INCOMPLETE"
 
@@ -70,10 +76,13 @@ def analyze_medicine(medicine):
 
 
 def process_medicines(medicines):
+
     results = []
 
     for medicine in medicines:
+
         analyzed = analyze_medicine(medicine)
+
         results.append(analyzed)
 
     return results
