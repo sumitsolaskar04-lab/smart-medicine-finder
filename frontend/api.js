@@ -2,32 +2,115 @@
 // MediScan AI - API helper
 // ============================================================================
 
-// Replace this value when Person 1 provides the deployed backend URL.
-const API_URL = window.MEDISCAN_API_URL || "";
+const API_URL =
+    "http://10.231.8.182:5000/api";
 
-/**
- * Search for a medicine using the project backend.
- *
- * Expected backend format:
- * GET /search?medicine=<medicine-name>
- */
+
+// ============================================================================
+// Search Medicine
+// ============================================================================
+
 async function searchMedicine(medicine) {
-    const value = String(medicine || "").trim();
+
+    const value =
+        String(medicine || "").trim();
+
 
     if (!value) {
-        throw new Error("Medicine name is required.");
+
+        throw new Error(
+            "Medicine name is required."
+        );
+
     }
 
-    if (!API_URL) {
-        throw new Error("Backend URL is not configured yet.");
-    }
 
-    const url = `${API_URL.replace(/\/$/, "")}/search?medicine=${encodeURIComponent(value)}`;
-    const response = await fetch(url);
+    const url =
+        `${API_URL}/search?q=${encodeURIComponent(value)}`;
+
+
+    const response =
+        await fetch(url);
+
 
     if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
+
+        throw new Error(
+            `HTTP Error: ${response.status}`
+        );
+
     }
 
+
     return response.json();
+
+}
+
+
+// ============================================================================
+// Get All Medicines
+// ============================================================================
+
+async function getMedicines() {
+
+    const url =
+        `${API_URL}/medicines`;
+
+
+    const response =
+        await fetch(url);
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            `HTTP Error: ${response.status}`
+        );
+
+    }
+
+
+    return response.json();
+
+}
+
+
+// ============================================================================
+// Get Specific Medicine
+// ============================================================================
+
+async function getMedicine(medicine) {
+
+    const value =
+        String(medicine || "").trim();
+
+
+    if (!value) {
+
+        throw new Error(
+            "Medicine name is required."
+        );
+
+    }
+
+
+    const url =
+        `${API_URL}/medicines/${encodeURIComponent(value)}`;
+
+
+    const response =
+        await fetch(url);
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            `HTTP Error: ${response.status}`
+        );
+
+    }
+
+
+    return response.json();
+
 }
