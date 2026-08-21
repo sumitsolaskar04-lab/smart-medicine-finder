@@ -4,17 +4,19 @@ import json
 import os
 import re
 import requests
-import random
-from urllib.parse import quote
 
 from medicine_analyzer import process_medicines
 from price_tracker import track_price, load_history
 from brightdata_client import trigger_scraper, get_collection_result
 
+
 app = Flask(__name__)
+
+# Allow frontend applications to access this backend
 CORS(app)
 
-# OpenStreetMap Overpass API endpoint
+
+# OpenStreetMap Overpass API
 OVERPASS_URL = "https://overpass-api.de"
 
 
@@ -34,20 +36,19 @@ def load_medicines():
 
 
 def save_medicines(medicines_list):
-    """
-    Saves or updates the primary local commercial medicine inventory cache.
-    """
     file_path = os.path.join("data", "medicines.json")
+
     os.makedirs("data", exist_ok=True)
 
     with open(file_path, "w", encoding="utf-8") as file:
-        json.dump({"medicines": medicines_list}, file, indent=4)
+        json.dump(
+            {"medicines": medicines_list},
+            file,
+            indent=4
+        )
 
 
 def load_jan_aushadhi():
-    """
-    Loads the government Jan Aushadhi generic catalog.
-    """
     file_path = os.path.join("data", "jan_aushadhi.json")
 
     if not os.path.exists(file_path):
@@ -56,18 +57,16 @@ def load_jan_aushadhi():
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             return json.load(file)
+
     except Exception:
         return []
 
 
 def normalize_string(text):
-    """
-    Strips noise characters and formatting words to maximize match accuracy.
-    """
     if not text:
         return ""
 
-    text = str(text).lower().strip()
+    text = text.lower().strip()
 
     text = re.sub(
         r'\b(tablets|capsules|ip|bp|usp|sustained release|sr|mg|ml)\b',
@@ -81,25 +80,22 @@ def normalize_string(text):
 
 
 def extract_strength(text):
-    """
-    Extracts explicit dosage patterns from product naming text strings.
-    """
     if not text:
         return ""
 
     match = re.search(
         r'(\d+\s*(mg|ml|mcg|g))',
-        str(text),
+        text,
         re.IGNORECASE
     )
 
-    return match.group(1).replace(" ", "").lower() if match else ""
+    if match:
+        return match.group(1).replace(" ", "").lower()
+
+    return ""
 
 
 def calculate_generic_substitution(commercial_med):
-    """
-    Evaluates cross-dataset chemical matches and calculates target financial savings metrics.
-    """
     if not commercial_med:
         return None
 
@@ -109,14 +105,11 @@ def calculate_generic_substitution(commercial_med):
         or commercial_med.get("medicine_name", "")
     )
 
-    try:
-        commercial_price = float(
-            commercial_med.get("mrp")
-            or commercial_med.get("price")
-            or 0
-        )
-    except (ValueError, TypeError):
-        commercial_price = 0
+    commercial_price = float(
+        commercial_med.get("mrp")
+        or commercial_med.get("price")
+        or 0
+    )
 
     if not composition or commercial_price <= 0:
         return None
@@ -124,13 +117,16 @@ def calculate_generic_substitution(commercial_med):
     norm_composition = normalize_string(composition)
 
     brand_strength = (
-        extract_strength(commercial_med.get("medicine_name", ""))
+        extract_strength(
+            commercial_med.get("medicine_name", "")
+        )
         or extract_strength(composition)
     )
 
     jan_database = load_jan_aushadhi()
 
     for generic in jan_database:
+
         ja_salt = (
             generic.get("clean_salt")
             or generic.get("generic_name", "")
@@ -138,32 +134,41 @@ def calculate_generic_substitution(commercial_med):
 
         ja_strength = (
             generic.get("strength")
-            or extract_strength(generic.get("generic_name", ""))
+            or extract_strength(
+                generic.get("generic_name", "")
+            )
         )
 
         if (
             normalize_string(ja_salt) in norm_composition
             or norm_composition in normalize_string(ja_salt)
         ):
+
             if (
                 not brand_strength
                 or brand_strength == ja_strength.lower().replace(" ", "")
             ):
-                try:
-                    ja_price = float(generic.get("mrp", 0))
-                except (ValueError, TypeError):
-                    ja_price = 0
+
+                ja_price = float(
+                    generic.get("mrp", 0)
+                )
 
                 if commercial_price > ja_price:
+
                     savings_amt = commercial_price - ja_price
+
                     savings_pct = (
                         savings_amt / commercial_price
                     ) * 100
 
                     return {
                         "has_generic_alternative": True,
-                        "generic_brand_name": generic.get("generic_name"),
-                        "drug_code": generic.get("drug_code"),
+                        "generic_brand_name": generic.get(
+                            "generic_name"
+                        ),
+                        "drug_code": generic.get(
+                            "drug_code"
+                        ),
                         "unit_size": generic.get(
                             "unit_size",
                             "10 Tablets"
@@ -186,95 +191,13 @@ def calculate_generic_substitution(commercial_med):
     }
 
 
-def extract_scraped_price(price_data):
-    """
-    Bright Data may return price as:
-    {"value": 15.9, "currency": "INR", "symbol": "₹"}
-
-    This function safely extracts the numeric price.
-    """
-
-    if isinstance(price_data, dict):
-        value = price_data.get("value")
-
-        try:
-            return float(value)
-        except (ValueError, TypeError):
-            return 0
-
-    try:
-        return float(price_data)
-    except (ValueError, TypeError):
-        return 0
-
-
-def scrape_from_apollo(query):
-    """
-    Searches Apollo Pharmacy dynamically using Bright Data.
-    """
-
-    encoded_query = quote(query.strip())
-
-    apollo_url = (
-        "https://www.apollopharmacy.in/search-medicines/"
-        + encoded_query
-    )
-
-    trigger_res = trigger_scraper(apollo_url)
-
-    collection_id = trigger_res.get("collection_id")
-
-    if not collection_id:
-        raise Exception(
-            "Bright Data did not return a collection ID."
-        )
-
-    scraped_data = get_collection_result(collection_id)
-
-    if not scraped_data:
-        return []
-
-    if isinstance(scraped_data, dict):
-        scraped_data = [scraped_data]
-
-    results = []
-
-    for item in scraped_data:
-        if not isinstance(item, dict):
-            continue
-
-        name = (
-            item.get("name")
-            or item.get("medicine_name")
-        )
-
-        price = extract_scraped_price(
-            item.get("price")
-            or item.get("mrp")
-        )
-
-        package_size = item.get("composition", "")
-
-        if not name or price <= 0:
-            continue
-
-        results.append({
-            "medicine_name": name,
-            "mrp": price,
-            "price": price,
-            "package_size": package_size,
-            "source": "Apollo Pharmacy",
-            "source_url": apollo_url
-        })
-
-    return results
-
+# ---------------------------------------------------------
+# HOME
+# ---------------------------------------------------------
 
 @app.route("/")
 def home():
-    """
-    Pure Backend Health Status Check Endpoint
-    """
+
     return jsonify({
         "status": "online",
         "service": "Medicine Aggregator, Geolocation Finder & Price Tracker Engine",
@@ -290,18 +213,28 @@ def home():
     })
 
 
+# ---------------------------------------------------------
+# GET ALL MEDICINES
+# ---------------------------------------------------------
+
 @app.route("/api/medicines")
 def get_medicines():
+
     medicines = load_medicines()
 
     results = process_medicines(medicines)
+
     history = load_history()
 
     for med in results:
-        name = med.get("medicine_name", "")
 
-        med["savings_alert"] = calculate_generic_substitution(
-            med
+        name = med.get(
+            "medicine_name",
+            ""
+        )
+
+        med["savings_alert"] = (
+            calculate_generic_substitution(med)
         )
 
         med["price_history_log"] = history.get(
@@ -315,21 +248,25 @@ def get_medicines():
     })
 
 
+# ---------------------------------------------------------
+# SEARCH MEDICINE
+# ---------------------------------------------------------
+
 @app.route("/api/search")
 def search_medicine():
 
-    query = request.args.get("q", "").strip()
+    query = request.args.get(
+        "q",
+        ""
+    ).strip().lower()
 
     if not query:
+
         return jsonify({
             "query": "",
             "count": 0,
             "medicines": []
         })
-
-    # ---------------------------------------------------------
-    # STEP 1: Search existing local medicines.json
-    # ---------------------------------------------------------
 
     medicines = load_medicines()
 
@@ -339,8 +276,6 @@ def search_medicine():
 
     matches = []
 
-    query_lower = query.lower()
-
     for medicine in results:
 
         name = medicine.get(
@@ -348,12 +283,10 @@ def search_medicine():
             ""
         ).lower()
 
-        if query_lower in name:
+        if query in name:
 
             medicine["savings_alert"] = (
-                calculate_generic_substitution(
-                    medicine
-                )
+                calculate_generic_substitution(medicine)
             )
 
             medicine["price_history_log"] = history.get(
@@ -363,120 +296,16 @@ def search_medicine():
 
             matches.append(medicine)
 
-    # ---------------------------------------------------------
-    # STEP 2: If local JSON has results, return them
-    # ---------------------------------------------------------
+    return jsonify({
+        "query": query,
+        "count": len(matches),
+        "medicines": matches
+    })
 
-    if matches:
 
-        return jsonify({
-            "query": query,
-            "count": len(matches),
-            "source": "local",
-            "medicines": matches
-        })
-
-    # ---------------------------------------------------------
-    # STEP 3: Medicine not found locally
-    # Search Apollo Pharmacy using Bright Data
-    # ---------------------------------------------------------
-
-    try:
-
-        scraped_results = scrape_from_apollo(query)
-
-        if not scraped_results:
-
-            return jsonify({
-                "query": query,
-                "count": 0,
-                "source": "apollo_pharmacy",
-                "medicines": []
-            })
-
-        # -----------------------------------------------------
-        # STEP 4: Save newly discovered medicines locally
-        # -----------------------------------------------------
-
-        current_catalog = load_medicines()
-
-        existing_names = {
-            str(med.get("medicine_name", "")).lower()
-            for med in current_catalog
-        }
-
-        for scraped in scraped_results:
-
-            name = scraped.get(
-                "medicine_name",
-                ""
-            )
-
-            if name.lower() not in existing_names:
-
-                current_catalog.append({
-                    "medicine_name": name,
-                    "mrp": scraped.get("mrp", 0),
-                    "price": scraped.get("price", 0),
-                    "package_size": scraped.get(
-                        "package_size",
-                        ""
-                    )
-                })
-
-                existing_names.add(
-                    name.lower()
-                )
-
-        save_medicines(current_catalog)
-
-        # -----------------------------------------------------
-        # STEP 5: Prepare response for frontend
-        # -----------------------------------------------------
-
-        final_results = []
-
-        for medicine in scraped_results:
-
-            medicine["savings_alert"] = (
-                calculate_generic_substitution(
-                    medicine
-                )
-            )
-
-            medicine["price_history_log"] = (
-                history.get(
-                    medicine.get(
-                        "medicine_name"
-                    ),
-                    []
-                )
-            )
-
-            final_results.append(medicine)
-
-        return jsonify({
-            "query": query,
-            "count": len(final_results),
-            "source": "apollo_pharmacy",
-            "medicines": final_results
-        })
-
-    except Exception as e:
-
-        print(
-            "Bright Data search error:",
-            str(e)
-        )
-
-        return jsonify({
-            "query": query,
-            "count": 0,
-            "source": "apollo_pharmacy",
-            "medicines": [],
-            "error": str(e)
-        }), 500
-
+# ---------------------------------------------------------
+# GET SINGLE MEDICINE
+# ---------------------------------------------------------
 
 @app.route("/api/medicines/<path:medicine_name>")
 def get_medicine(medicine_name):
@@ -497,18 +326,12 @@ def get_medicine(medicine_name):
         if name == medicine_name.strip().lower():
 
             medicine["savings_alert"] = (
-                calculate_generic_substitution(
-                    medicine
-                )
+                calculate_generic_substitution(medicine)
             )
 
-            medicine["price_history_log"] = (
-                history.get(
-                    medicine.get(
-                        "medicine_name"
-                    ),
-                    []
-                )
+            medicine["price_history_log"] = history.get(
+                medicine.get("medicine_name"),
+                []
             )
 
             return jsonify({
@@ -522,18 +345,19 @@ def get_medicine(medicine_name):
     }), 404
 
 
+# ---------------------------------------------------------
+# BRIGHT DATA SCRAPE AND SYNC
+# ---------------------------------------------------------
+
 @app.route("/api/scrape-and-sync", methods=["POST"])
 def scrape_and_sync():
-    """
-    On-Demand Scraper Pipeline using Bright Data.
-    Acts as the master repository builder to populate medicine definitions and baseline prices.
-    """
 
     data = request.get_json() or {}
 
     target_url = data.get("url")
 
     if not target_url:
+
         return jsonify({
             "status": "failed",
             "error": "Missing target extraction URL parameter"
@@ -541,13 +365,16 @@ def scrape_and_sync():
 
     try:
 
-        trigger_res = trigger_scraper(target_url)
+        trigger_res = trigger_scraper(
+            target_url
+        )
 
         collection_id = trigger_res.get(
             "collection_id"
         )
 
         if not collection_id:
+
             return jsonify({
                 "status": "failed",
                 "error": "No collection ID returned from scraper client"
@@ -570,7 +397,7 @@ def scrape_and_sync():
                 or item.get("medicine_name")
             )
 
-            scraped_price = extract_scraped_price(
+            scraped_price = (
                 item.get("price")
                 or item.get("mrp")
             )
@@ -580,8 +407,21 @@ def scrape_and_sync():
                 or item.get("active_ingredient", "")
             )
 
-            if not med_name or scraped_price <= 0:
+            if not med_name or scraped_price is None:
                 continue
+
+            # Bright Data may return price as:
+            # {"value": 15.9, "currency": "INR", "symbol": "₹"}
+
+            if isinstance(scraped_price, dict):
+
+                scraped_price = scraped_price.get(
+                    "value"
+                )
+
+            scraped_price = float(
+                scraped_price
+            )
 
             tracking_metrics = track_price(
                 med_name,
@@ -598,12 +438,12 @@ def scrape_and_sync():
                 ).lower() == med_name.lower():
 
                     med["mrp"] = scraped_price
-                    med["price"] = scraped_price
 
                     if composition:
                         med["composition"] = composition
 
                     matched_in_catalog = True
+
                     catalog_updated = True
 
                     break
@@ -613,7 +453,6 @@ def scrape_and_sync():
                 current_catalog.append({
                     "medicine_name": med_name,
                     "mrp": scraped_price,
-                    "price": scraped_price,
                     "composition": composition
                 })
 
@@ -625,7 +464,10 @@ def scrape_and_sync():
             })
 
         if catalog_updated:
-            save_medicines(current_catalog)
+
+            save_medicines(
+                current_catalog
+            )
 
         return jsonify({
             "status": "success",
@@ -644,6 +486,10 @@ def scrape_and_sync():
         }), 500
 
 
+# ---------------------------------------------------------
+# NEARBY PHARMACIES
+# ---------------------------------------------------------
+
 @app.route(
     "/api/medicine-availability-nearby",
     methods=["GET"]
@@ -651,25 +497,32 @@ def scrape_and_sync():
 def get_medicine_availability_nearby():
 
     """
-    Finds real offline storefronts within a radius,
-    evaluates their pricing, cross-references the
-    Jan Aushadhi substitution dataset, and sorts from
-    cheapest to dearest.
+    Finds nearby pharmacies using OpenStreetMap.
+
+    NOTE:
+    This endpoint finds nearby pharmacy locations only.
+    It does NOT check medicine stock or medicine prices.
     """
 
     query_medicine = request.args.get(
         "medicine",
         ""
-    ).strip().lower()
+    ).strip()
 
-    lat = request.args.get("lat")
-    lon = request.args.get("lon")
+    lat = request.args.get(
+        "lat"
+    )
+
+    lon = request.args.get(
+        "lon"
+    )
 
     radius = request.args.get(
         "radius",
         3000
     )
 
+    # Validate medicine and location
     if not query_medicine or not lat or not lon:
 
         return jsonify({
@@ -680,6 +533,137 @@ def get_medicine_availability_nearby():
             )
         }), 400
 
+    # Convert values
+    try:
+
+        lat = float(lat)
+
+        lon = float(lon)
+
+        radius = int(radius)
+
+        if radius <= 0:
+            radius = 3000
+
+    except ValueError:
+
+        return jsonify({
+            "status": "failed",
+            "error": (
+                "lat, lon and radius must be valid numbers"
+            )
+        }), 400
+
+    # OpenStreetMap Overpass query
+    overpass_query = f"""
+    [out:json];
+    (
+        node["amenity"="pharmacy"](around:{radius},{lat},{lon});
+        way["amenity"="pharmacy"](around:{radius},{lat},{lon});
+        relation["amenity"="pharmacy"](around:{radius},{lat},{lon});
+    );
+    out center;
+    """
+
+    try:
+
+        response = requests.post(
+            f"{OVERPASS_URL}/api/interpreter",
+            data={
+                "data": overpass_query
+            },
+            headers={
+                "User-Agent": "SmartMedicineFinder/1.0",
+                "Accept": "application/json"
+            },
+            timeout=30
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+    except requests.RequestException as e:
+
+        return jsonify({
+            "status": "failed",
+            "error": (
+                f"Unable to find nearby pharmacies: {str(e)}"
+            )
+        }), 500
+
+    stores = []
+
+    # Process pharmacy results
+    for element in data.get(
+        "elements",
+        []
+    ):
+
+        tags = element.get(
+            "tags",
+            {}
+        )
+
+        name = tags.get(
+            "name",
+            "Unnamed Pharmacy"
+        )
+
+        # For nodes
+        if (
+            "lat" in element
+            and "lon" in element
+        ):
+
+            store_lat = element["lat"]
+
+            store_lon = element["lon"]
+
+        # For ways/relations
+        elif "center" in element:
+
+            store_lat = element["center"].get(
+                "lat"
+            )
+
+            store_lon = element["center"].get(
+                "lon"
+            )
+
+        else:
+
+            continue
+
+        if (
+            store_lat is None
+            or store_lon is None
+        ):
+
+            continue
+
+        stores.append({
+            "name": name,
+            "latitude": store_lat,
+            "longitude": store_lon
+        })
+
+    return jsonify({
+        "status": "success",
+        "medicine": query_medicine,
+        "location": {
+            "latitude": lat,
+            "longitude": lon
+        },
+        "radius": radius,
+        "stores": stores,
+        "count": len(stores)
+    })
+
+
+# ---------------------------------------------------------
+# START FLASK SERVER
+# ---------------------------------------------------------
 
 if __name__ == "__main__":
 
